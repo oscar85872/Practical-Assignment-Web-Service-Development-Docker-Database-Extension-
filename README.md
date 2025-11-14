@@ -25,6 +25,25 @@ Configure these environment variables or use default values:
 - DB_PASSWORD: Database password (default: 'postgres')
 - FLASK_DEBUG: Enable debug mode (default: '0')
 
+## Database Schema
+
+### Table: expenses
+
+| Column Name | Data Type | Constraints | Description |
+|-------------|-----------|-------------|-------------|
+| id | SERIAL | PRIMARY KEY | Auto-incrementing unique identifier |
+| amount | DECIMAL(10,2) | NOT NULL | Monetary amount (max 10 digits, 2 decimal places) |
+| description | VARCHAR(255) | NOT NULL | Transaction description (max 255 characters) |
+| category | VARCHAR(50) | NOT NULL | Expense/income category |
+| date | DATE | NOT NULL | Transaction date |
+| type | VARCHAR(10) | CHECK (type IN ('expense', 'income')) NOT NULL | Transaction type |
+| created_at | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Record creation timestamp |
+
+### Database Indexes
+- idx_expenses_date: Optimizes date-based queries
+- idx_expenses_category: Optimizes category-based filtering
+- idx_expenses_type: Optimizes type-based filtering
+
 ## API Endpoints
 
 ### 1. Health Check & Status
@@ -136,3 +155,39 @@ This version extends the original CSV-based implementation to include:
 - RESTful API design
 - Automated database initialization
 - Comprehensive error handling
+
+##Examples of endpoints
+
+-http://127.0.0.1:5000/
+<img width="493" height="136" alt="image" src="https://github.com/user-attachments/assets/16fd9584-8d9d-4859-9c9b-229abca8be03" />
+
+-http://127.0.0.1:5000/api/status
+<img width="650" height="207" alt="image" src="https://github.com/user-attachments/assets/9f589acd-9cfa-4d0f-9995-ac0823b0f75c" />
+
+-http://127.0.0.1:5000/api/expenses/list?api_key=OMHT2409
+<img width="659" height="1202" alt="image" src="https://github.com/user-attachments/assets/9612dce4-476d-4e0f-b12b-ca00e5182d38" />
+
+-http://localhost:5000/api/summary/months?api_key=OMHT2409
+<img width="379" height="1185" alt="image" src="https://github.com/user-attachments/assets/c13ab64f-cf8a-41cf-8edb-ad8c9a0da038" />
+
+-Python programs were used to add and remove expenses (add_expense and delete_expense)
+
+add_expense
+
+<img width="1238" height="668" alt="image" src="https://github.com/user-attachments/assets/f1f1224e-fdd5-45e3-8835-2ff719b8d5c8" />
+<img width="596" height="291" alt="image" src="https://github.com/user-attachments/assets/b53da2a0-8092-4eee-956b-cf6de7157033" />
+
+delete_expense (when you delete an expense, its ID is also deleted)
+
+<img width="1125" height="293" alt="image" src="https://github.com/user-attachments/assets/ad376046-7349-442c-977c-f4d4944507bd" />
+<img width="689" height="474" alt="image" src="https://github.com/user-attachments/assets/6505686b-c2e2-492b-ae18-14398fa7cce0" />
+
+
+
+
+
+
+
+
+
+
