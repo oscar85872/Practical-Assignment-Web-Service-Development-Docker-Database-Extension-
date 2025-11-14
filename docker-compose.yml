@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=expensesdb
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - FLASK_DEBUG=1
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    restart: unless-stopped
+    # Solo un sleep corto, la lógica de reintentos está en el código
+    command: >
+      sh -c "sleep 5 && python main_api2.py"
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=expensesdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d expensesdb"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  postgres_data:
